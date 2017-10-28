@@ -8,12 +8,13 @@ from keras.layers.wrappers import TimeDistributed
 from keras.models import load_model
 from collections import OrderedDict
 import itertools
+import sys, os
 
-def readTestingData():
+def readTestingData(directory):
     frame_sequence = {}
     record_frame = []
     print('Parsing Testing Data ...')
-    mfcc_test = pd.read_csv('./data/mfcc/test.ark', delim_whitespace=True, header=None).as_matrix() #shape: (1124823, 40)
+    mfcc_test = pd.read_csv('./'+directory+'mfcc/test.ark', delim_whitespace=True, header=None).as_matrix() #shape: (1124823, 40)
     # fbank_test = pd.read_csv('./data/fbank/test.ark', delim_whitespace=True, header=None).as_matrix()
     # mfcc_test = np.concatenate((mfcc_test, fbank_test[:,1:]), axis=1)
     # print(mfcc_test.shape)
@@ -68,11 +69,17 @@ def getResultLabel(result):
         concert_result.append(s)
     return concert_result
 
-if __name__ == '__main__':
-    mfcc_test, record_frame = readTestingData()
+def main(argv):
+    mfcc_test, record_frame = readTestingData(argv[2])
     mfcc_test = mfcc_test.reshape(-1,777,mfcc_test.shape[1])
-    model = load_model('./model/model_mfcc_bid.h5')
-    result = model.predict(mfcc_test, batch_size=500, verbose=0)
+
+    print("Start reading model ...")
+    if argv[1] == "rnn" or argv[1] == "best":
+        model = load_model('./model/model_rnn.h5')
+    elif argv[1] == "cnn":
+        model = load_model('./model/model_cnn.h5')
+    print("Predict ...")
+    result = model.predict(mfcc_test, batch_size=100, verbose=0)
     writeText = "id,phone_sequence\n"
     result = getResultLabel(result[:,:,:-1])
     for index, item in enumerate(record_frame):
@@ -80,5 +87,8 @@ if __name__ == '__main__':
         s = ''.join(ch for ch, _ in itertools.groupby(s))
         s = s.strip("L")
         writeText += item["id"] + "," + s + '\n'
-    with open('./result_10.csv', "w") as f:
+    with open(argv[3], "w") as f:
         f.write(writeText)
+
+if __name__ == '__main__':
+    main(sys.argv)

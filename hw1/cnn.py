@@ -116,5 +116,5 @@ if __name__ == '__main__':
     print("Loss: {}".format(score[0]))
     print("Accuract: {}".format(score[1]))
 
-    model.save('./model/model_mfcc_cnn.h5')
+    model.save('./model/model_cnn.h5')
     # del model
