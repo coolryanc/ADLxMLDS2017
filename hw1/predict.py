@@ -14,7 +14,7 @@ def readTestingData(directory):
     frame_sequence = {}
     record_frame = []
     print('Parsing Testing Data ...')
-    mfcc_test = pd.read_csv('./'+directory+'mfcc/test.ark', delim_whitespace=True, header=None).as_matrix() #shape: (1124823, 40)
+    mfcc_test = pd.read_csv(directory+'mfcc/test.ark', delim_whitespace=True, header=None).as_matrix() #shape: (1124823, 40)
     # fbank_test = pd.read_csv('./data/fbank/test.ark', delim_whitespace=True, header=None).as_matrix()
     # mfcc_test = np.concatenate((mfcc_test, fbank_test[:,1:]), axis=1)
     # print(mfcc_test.shape)
@@ -50,8 +50,8 @@ def getResultLabel(result, directory):
     fe_tn_char_dic = {}
     fe_phone_char_dic = {}
     char_map = {}
-    fe_phone_char = pd.read_csv('./'+directory+'48phone_char.map', delim_whitespace=True, header=None).as_matrix() #shape: (48,3)
-    fe_tn_char = pd.read_csv('./'+directory+'phones/48_39.map', delim_whitespace=True, header=None).as_matrix() #shape: (48,3)
+    fe_phone_char = pd.read_csv(directory+'48phone_char.map', delim_whitespace=True, header=None).as_matrix() #shape: (48,3)
+    fe_tn_char = pd.read_csv(directory+'phones/48_39.map', delim_whitespace=True, header=None).as_matrix() #shape: (48,3)
     print('\nBuild dict ... map phone seq')
     for item in fe_phone_char:
         fe_phone_char_dic[item[1]] = item[0]
