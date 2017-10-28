@@ -87,7 +87,9 @@ def main(argv):
         s = ''.join(ch for ch, _ in itertools.groupby(s))
         s = s.strip("L")
         writeText += item["id"] + "," + s + '\n'
-    with open(argv[3], "w") as f:
+    filename = argv[3]
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    with open(filename, "w") as f:
         f.write(writeText)
 
 if __name__ == '__main__':
