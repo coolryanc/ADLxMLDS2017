@@ -45,13 +45,13 @@ def paddingTestData(mfcc_test, frame_sequence, record_frame): #mfcc_test
         expand_test[index*max_seq_len:index*max_seq_len+max_seq_len,:] = np.concatenate((get_mfcc,fill),axis=0)
     return expand_test
 
-def getResultLabel(result):
+def getResultLabel(result, directory):
     final_map = {}
     fe_tn_char_dic = {}
     fe_phone_char_dic = {}
     char_map = {}
-    fe_phone_char = pd.read_csv('./data/48phone_char.map', delim_whitespace=True, header=None).as_matrix() #shape: (48,3)
-    fe_tn_char = pd.read_csv('./data/phones/48_39.map', delim_whitespace=True, header=None).as_matrix() #shape: (48,3)
+    fe_phone_char = pd.read_csv('./'+directory+'48phone_char.map', delim_whitespace=True, header=None).as_matrix() #shape: (48,3)
+    fe_tn_char = pd.read_csv('./'+directory+'phones/48_39.map', delim_whitespace=True, header=None).as_matrix() #shape: (48,3)
     print('\nBuild dict ... map phone seq')
     for item in fe_phone_char:
         fe_phone_char_dic[item[1]] = item[0]
@@ -81,7 +81,7 @@ def main(argv):
     print("Predict ...")
     result = model.predict(mfcc_test, batch_size=100, verbose=0)
     writeText = "id,phone_sequence\n"
-    result = getResultLabel(result[:,:,:-1])
+    result = getResultLabel(result[:,:,:-1], argv[2])
     for index, item in enumerate(record_frame):
         s = result[index]
         s = ''.join(ch for ch, _ in itertools.groupby(s))
