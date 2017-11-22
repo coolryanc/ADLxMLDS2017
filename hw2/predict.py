@@ -109,9 +109,9 @@ def decode_sequence(input_seq, encoder_model, decoder_model, vocabs):
 
 def main(argv):
     testing_data = readTraingFeature(argv[1])
-    # peer_data = readPeerFeature(argv[1])
+    peer_data = readPeerFeature(argv[1])
     test_id = pd.read_csv(argv[1]+'testing_id.txt', header=None).as_matrix() #./data
-    # peer_id = pd.read_csv(argv[1]+'peer_review_id.txt', header=None).as_matrix()
+    peer_id = pd.read_csv(argv[1]+'peer_review_id.txt', header=None).as_matrix()
     vocabs = readLabel(argv[1]+'training_label.json')
     encoder_model = load_model('./model/s2s_en_1.h5')
     decoder_model = load_model('./model/s2s_de_1.h5')
@@ -122,21 +122,21 @@ def main(argv):
         decoded_sentence = decode_sequence(input_seq, encoder_model, decoder_model, vocabs)
         print(decoded_sentence)
         writeText += test_id[seq_index][0] + "," + decoded_sentence.strip(' ') + ".\n"
-    # peer_writeText = ""
-    # for seq_index in range(len(peer_data)):
-    #     input_seq = peer_data[seq_index: seq_index + 1]
-    #     print('\r{}'.format(peer_id[seq_index][0]), end='', flush=True)
-    #     decoded_sentence = decode_sequence(input_seq, encoder_model, decoder_model, vocabs)
-    #     peer_writeText += peer_id[seq_index][0] + "," + decoded_sentence.strip(' ') + "\n"
+    peer_writeText = ""
+    for seq_index in range(len(peer_data)):
+        input_seq = peer_data[seq_index: seq_index + 1]
+        print('\r{}'.format(peer_id[seq_index][0]), end='', flush=True)
+        decoded_sentence = decode_sequence(input_seq, encoder_model, decoder_model, vocabs)
+        peer_writeText += peer_id[seq_index][0] + "," + decoded_sentence.strip(' ') + "\n"
 
     filename = argv[2]
     os.makedirs(os.path.dirname(filename), exist_ok=True)
     with open(filename, "w") as f:
         f.write(writeText)
-    # peer_filename = argv[3]
-    # os.makedirs(os.path.dirname(peer_filename), exist_ok=True)
-    # with open(peer_filename, "w") as f:
-    #     f.write(peer_writeText)
+    peer_filename = argv[3]
+    os.makedirs(os.path.dirname(peer_filename), exist_ok=True)
+    with open(peer_filename, "w") as f:
+        f.write(peer_writeText)
 
 if __name__ == '__main__':
     main(sys.argv)
