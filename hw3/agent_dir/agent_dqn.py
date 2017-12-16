@@ -16,7 +16,8 @@ TARGET_UPDATE = 1000
 MEMORY_SIZE = 10000
 EXPLORATION = 1000000
 START_EXPLORATION = 1.
-model_path = "../checkpoints_breakput/Breakout.ckpt"
+DISCOUNT = 0.99
+model_path = "./checkpoints_breakput/Breakout.ckpt"
 env = gym.make('BreakoutNoFrameskip-v4')
 
 class Agent_DQN(Agent):
@@ -201,6 +202,5 @@ class Agent_DQN(Agent):
                                                    mainDQN.a: a_stack})
 
     def saveModel(self, epoch, epoch_score, average_reward, epoch_Q, average_Q, mainDQN):
-        os.makedirs(os.path.dirname(model_path), exist_ok=True)
         save_path = mainDQN.saver.save(mainDQN.sess, model_path, global_step=(epoch - 1))
         print("Model(epoch :", epoch, ") saved in file: ", save_path, " Now time : ", datetime.datetime.now())
