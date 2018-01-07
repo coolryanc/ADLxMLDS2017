@@ -7,6 +7,7 @@ import skimage.color
 import numpy as np
 from dcgan import ConditionalGAN
 from utils import DataManager
+np.random.seed(seed=123)
 
 def run_test_epoch(sess, dm, model, PARA):
 
@@ -15,13 +16,10 @@ def run_test_epoch(sess, dm, model, PARA):
 
 	total_batch_num = dm.total_batch_num(PARA.batch_size, mode='test')
 
-
 	for i in range(total_batch_num):
 
 		data, bz = dm.draw_batch(PARA.batch_size, PARA.z_dim, mode='test')
 		bh = [d.tags for d in data]
-
-
 		images = sess.run(model.x_,
 			feed_dict={
 				model.z:bz,
@@ -29,8 +27,6 @@ def run_test_epoch(sess, dm, model, PARA):
 				model.training:False
 			}
 		)
-
-		# save images
 		for i, (image, d) in enumerate(zip(images, data)):
 			image = (image + 1.0) / 2.0
 			img_resized = image
@@ -73,13 +69,13 @@ if __name__ == "__main__":
 	tf.flags.DEFINE_integer("z_dim", 100, "")
 
 	tf.flags.DEFINE_float("scale", 10.0, "")
-	tf.flags.DEFINE_float("learning_rate", 1e-5, "")
+	tf.flags.DEFINE_float("learning_rate", 2e-4, "")
 
 	tf.flags.DEFINE_string("tag_file", "./data/tags_clean.csv", "")
 	tf.flags.DEFINE_string("img_dir", "./data/faces/", "")
 	tf.flags.DEFINE_string("test_text", "./data/sample_testing_text.txt", "")
 	tf.flags.DEFINE_string("vocab", "./vocab", "")
-	tf.flags.DEFINE_string("log", "./log", "")
+	tf.flags.DEFINE_string("log", "./model", "")
 	tf.flags.DEFINE_string("test_img_dir", "./samples/", "")
 	tf.flags.DEFINE_string("generator_output_layer", 'tanh', "")
 

@@ -87,21 +87,21 @@ def train(PARA):
 
 if __name__ == "__main__":
 	tf.flags.DEFINE_integer("mode", 2, "") # 1=test, 2=train
-	tf.flags.DEFINE_integer("epochs", 50, "")
+	tf.flags.DEFINE_integer("epochs", 200, "")
 	tf.flags.DEFINE_integer("d_epochs", 1, "") # discriminator update epochs
 	tf.flags.DEFINE_integer("g_epochs", 1, "") # generator update epochs
 	tf.flags.DEFINE_integer("batch_size", 100, "")
 	tf.flags.DEFINE_integer("z_dim", 100, "")
-	tf.flags.DEFINE_integer("load", 1, "") # load model
+	tf.flags.DEFINE_integer("load", 0, "") # load model
 
 	tf.flags.DEFINE_float("scale", 10.0, "")
-	tf.flags.DEFINE_float("learning_rate", 1e-5, "")
+	tf.flags.DEFINE_float("learning_rate", 1e-4, "")
 
 	tf.flags.DEFINE_string("tag_file", "./data/tags_clean.csv", "")
 	tf.flags.DEFINE_string("img_dir", "./data/faces/", "")
 	tf.flags.DEFINE_string("test_text", "./data/sample_testing_text.txt", "")
 	tf.flags.DEFINE_string("vocab", "./vocab", "Model vocab path")
-	tf.flags.DEFINE_string("log", "./log", "Model log directory")
+	tf.flags.DEFINE_string("log", "./model", "Model log directory")
 	tf.flags.DEFINE_string("test_img_dir", "./samples/", "")
 	tf.flags.DEFINE_string("generator_output_layer", 'tanh', "")
 
